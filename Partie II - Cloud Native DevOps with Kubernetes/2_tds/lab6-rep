@@ -1,0 +1,25 @@
+
+
+## Introduction au contrôle d'accès basé sur les rôles (RBAC) (Introducing Role-Based Access Control (RBAC))
+![alt text](lab6/Screenshot_1.png)
+On remarque que authorization mode contient RBAC
+![alt text](lab6/Screenshot_2.png)
+
+## De quels rôles ai-je besoin ? (What Roles Do I Need?)
+![alt text](lab6/Screenshot_3.png)
+
+## Dépannage RBAC (RBAC Troubleshooting)
+En essayant la commande, j'ai vu qu'elle ne fonctionnait pas car la commande "grep" n'est pas reconnu dans Windows, du coup j'ai utilisé "Select-String"
+![alt text](lab6/Screenshot_4.png)
+
+## kube-bench
+![alt text](lab6/Screenshot_5.png)
+
+
+### État du plan de contrôle (Control plane status)
+![alt text](lab6/Screenshot_6.png)
+![alt text](lab6/Screenshot_7.png)
+
+### Utilisation du CPU et de la mémoire (CPU and Memory Utilization)
+![alt text](lab6/Screenshot_8.png)
+
