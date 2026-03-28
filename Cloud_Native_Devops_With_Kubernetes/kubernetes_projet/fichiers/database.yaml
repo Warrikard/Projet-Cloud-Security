@@ -1,6 +1,6 @@
 # k8s/04-database.yaml (Mis à jour)
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: postgres-deployment
   namespace: cloud-native-project
