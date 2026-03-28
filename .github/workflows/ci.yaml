@@ -1,0 +1,39 @@
+# .github/workflows/ci.yml
+name: Pipeline CI - Build & Push Docker
+
+on:
+  push:
+    branches: [ "main", "master" ] # Se déclenche quand on envoie du code sur la branche principale
+
+jobs:
+  build-et-push:
+    name: Création des images Docker
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. On récupère le code source du projet
+      - name: Checkout du code
+        uses: actions/checkout@v3
+
+      # 2. On se connecte au compte Docker Hub
+      - name: Connexion à Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 3. On construit et on envoie le Backend
+      - name: Build & Push Backend
+        uses: docker/build-push-action@v4
+        with:
+          context: ./backend
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/monbackend:latest
+
+      # 4. On construit et on envoie le Frontend
+      - name: Build & Push Frontend
+        uses: docker/build-push-action@v4
+        with:
+          context: ./frontend
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/monfrontend:latest

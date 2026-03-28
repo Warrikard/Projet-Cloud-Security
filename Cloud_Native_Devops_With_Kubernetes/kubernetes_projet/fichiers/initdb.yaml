@@ -1,0 +1,21 @@
+# k8s/01b-db-init.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-init-script
+  namespace: cloud-native-project
+data:
+  init.sql: |
+    CREATE TABLE IF NOT EXISTS menu (
+        id SERIAL PRIMARY KEY,
+        nom VARCHAR(100) NOT NULL,
+        description TEXT,
+        prix DECIMAL(5,2) NOT NULL,
+        categorie VARCHAR(50)
+    );
+
+    INSERT INTO menu (nom, description, prix, categorie) VALUES
+    ('Burger Maison', 'Pain brioché, steak haché, cheddar affiné, sauce secrète', 15.50, 'Plats'),
+    ('Salade César', 'Laitue romaine, poulet grillé, parmesan, croûtons', 12.00, 'Entrées'),
+    ('Tiramisu', 'Mascarpone, café, boudoirs, cacao amer', 7.50, 'Desserts'),
+    ('Limonade Artisanale', 'Citrons frais, sucre de canne, eau pétillante', 4.00, 'Boissons');

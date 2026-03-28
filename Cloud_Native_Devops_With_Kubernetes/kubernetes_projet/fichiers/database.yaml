@@ -1,0 +1,54 @@
+# k8s/04-database.yaml (Mis à jour)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+  namespace: cloud-native-project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15-alpine
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "250m"
+        ports:
+        - containerPort: 5432
+        envFrom:
+        - secretRef:
+            name: db-credentials
+        # NOUVEAU : On monte le fichier SQL dans le dossier d'initialisation de Postgres
+        volumeMounts:
+        - name: init-script
+          mountPath: /docker-entrypoint-initdb.d/init.sql
+          subPath: init.sql
+      # NOUVEAU : On déclare le volume à partir du ConfigMap
+      volumes:
+      - name: init-script
+        configMap:
+          name: db-init-script
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  namespace: cloud-native-project
+spec:
+  selector:
+    app: postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432

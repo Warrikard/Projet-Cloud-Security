@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: postgres-backup
+  namespace: cloud-native-project
+spec:
+  schedule: "0 2 * * *" # Tous les jours à 2h00 du matin
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: pg-backup
+            image: postgres:15-alpine
+            command:
+            - /bin/sh
+            - -c
+            - "pg_dump -h $DB_HOST -p $DB_PORT -U $POSTGRES_USER -d $POSTGRES_DB -F c -f /tmp/db_backup.dump && echo 'Backup terminé avec succès !'"
+            envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: db-credentials
+          restartPolicy: OnFailure

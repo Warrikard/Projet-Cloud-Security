@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Le Cloud Gourmand</title>
+    <style>
+        body { font-family: sans-serif; background: #f8f9fa; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .menu-item { background: white; padding: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .categorie { background: #ecf0f1; padding: 3px 8px; border-radius: 12px; font-size: 0.8em; }
+        .nom { font-weight: bold; color: #2980b9; }
+        .prix { font-weight: bold; color: #e74c3c; float: right; }
+    </style>
+</head>
+<body>
+    <h1>🍽️ Le Cloud Gourmand</h1>
+    <div id="menu">Chargement...</div>
+    <script>
+        fetch('/api/menu')
+            .then(res => res.json())
+            .then(plats => {
+                document.getElementById('menu').innerHTML = plats.map(p => `
+                    <div class="menu-item">
+                        <span class="categorie">${p.categorie}</span>
+                        <div><span class="nom">${p.nom}</span> <span class="prix">${p.prix} €</span></div>
+                        <p>${p.description}</p>
+                    </div>
+                `).join('');
+            })
+            .catch(() => document.getElementById('menu').innerHTML = "Erreur de connexion.");
+    </script>
+</body>
+</html>
