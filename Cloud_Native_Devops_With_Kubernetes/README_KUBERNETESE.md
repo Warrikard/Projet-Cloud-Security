@@ -8,22 +8,22 @@ Ce projet démontre le déploiement d'une application cloud-native appelée **«
 Projet-Cloud-Security/
 ├── .github/workflows/              
 │   └── ci.yaml.yaml/               # Pipeline CI
-├── Cloud_Native_Devops_With_Kubernetes/
-│   ├── tds.py/                     # Labs
-│   └── kubernetes_projet.py/       
-│       ├── app.py/   
-│       └── fichiers.py/            # Fichiers de cofiguration
-│           ├── backend.yaml        
-│           ├── backup.yaml         
-│           ├── database.yaml       
-│           ├── frontend.yaml       
-│           ├── get_helm.sh         
-│           ├── initdb.yaml         
-│           ├── namespace.yaml      
-│           ├── networkpolicy.yaml  
-│           ├── rbac.yaml           
-│           └── script              
-└── README.md                       # Documentation
+└── Cloud_Native_Devops_With_Kubernetes/
+   ├── tds.py/                     # Labs
+   ├── kubernetes_projet.py/       
+   │   ├── app.py/   
+   │   └── fichiers.py/            # Fichiers de cofiguration
+   │       ├── backend.yaml        
+   │       ├── backup.yaml         
+   │       ├── database.yaml       
+   │       ├── frontend.yaml       
+   │       ├── get_helm.sh         
+   │       ├── initdb.yaml         
+   │       ├── namespace.yaml      
+   │       ├── networkpolicy.yaml  
+   │       ├── rbac.yaml           
+   │       └── script              
+   └── README_KUBERNETES.md                    # Documentation
 ```
 
 L'application est divisée en trois microservices principaux :
@@ -99,6 +99,9 @@ Pour déployer et tester l'application localement :
 - **Phase 1 : Architecture et Déploiement** : Conteneurisation, déploiement sur K3s, gestion des configs/secrets.
 - **Phase 2 : Gestion des Ressources et Observabilité** : Quotas de ressources, monitoring avec Prometheus/Grafana (modèles USE et RED).
 - **Phase 3 : Sécurité** : RBAC pour accès limité, NetworkPolicies pour isolation réseau, scans Trivy, backups automatiques.
+
+## Vidéo démonstration
+https://drive.google.com/drive/folders/1a6Tn3E2P5XCAqC2piMdCUgbEkBt6DPeq?usp=sharing
 
 ## Conclusion
 Ce projet illustre les principes du cloud-native sur Kubernetes, en mettant l'accent sur la sécurité, la scalabilité et l'observabilité. Il prépare à des déploiements plus avancés comme GitOps ou CI/CD automatisés.
