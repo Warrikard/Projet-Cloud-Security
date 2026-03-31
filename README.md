@@ -38,13 +38,18 @@ Pour déployer et tester l'application localement :
 
 1. **Prérequis** : Assurez-vous d'avoir Docker, Kubernetes (K3s) et kubectl installés. Clonez le dépôt :
    ```
-   git clone <URL-du-repo>
+   git clone https://github.com/Warrikard/Projet-Cloud-Security.git
    cd Projet-Cloud-Security/Cloud_Native_Devops_With_Kubernetes/kubernetes_projet
    ```
 
 2. **Démarrer le Cluster K3s** :
    ```
    k3s server --write-kubeconfig-mode 644
+   ```
+   ```
+   #(Optionnel) Supprimer et reinstaller le cluster k3s
+   /usr/local/bin/k3s-uninstall.sh
+   curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644
    ```
 
 3. **Appliquer les Configurations** :
@@ -75,13 +80,13 @@ Pour déployer et tester l'application localement :
    kubectl get pods,svc -n cloud-native-project
    kubectl get configmaps,secrets -n cloud-native-project
    ```
+   - (Si non fait) Déclarer le chemin de la configuration sur les onglet que l'on utilise : `export KUBECONFIG=/etc/rancher/k3s/k3s.yaml`
 
 5. **Accéder à l'Application** :
    - Port-forward le service frontend : `kubectl port-forward svc/frontend-service 8080:80 -n cloud-native-project`
    - Ouvrez un navigateur à `http://localhost:8080` pour voir le menu interactif.
 
 6. **Monitoring (Optionnel)** :
-   - (Si non fait) Déclarer le chemin de la configuration : `export KUBECONFIG=/etc/rancher/k3s/k3s.yaml`
    - Installez Prometheus/Grafana via Helm si configuré : `helm install monitoring prometheus-community/kube-prometheus-stack`
    - Port-forward le service Grafana : `kubectl port-forward svc/monitoring-grafana 3000:80 -n default`
    - Accédez aux dashboards pour surveiller CPU/RAM et requêtes.
