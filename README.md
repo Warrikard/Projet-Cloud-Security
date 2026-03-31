@@ -73,4 +73,3 @@ Pour déployer et tester l'application localement :
 
 ## Conclusion
 Ce projet illustre les principes du cloud-native sur Kubernetes, en mettant l'accent sur la sécurité, la scalabilité et l'observabilité. Il prépare à des déploiements plus avancés comme GitOps ou CI/CD automatisés.
-'@; Set-Content -Path README.md -Value $content
