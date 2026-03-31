@@ -23,7 +23,7 @@ Projet-Cloud-Security/
    │       ├── networkpolicy.yaml  
    │       ├── rbac.yaml           
    │       └── script              
-   └── README_KUBERNETES.md                    # Documentation
+   └── README_KUBERNETES.md         # Documentation
 ```
 
 L'application est divisée en trois microservices principaux :
