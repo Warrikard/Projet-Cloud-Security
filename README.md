@@ -26,12 +26,27 @@ Pour déployer et tester l'application localement :
    ```
 
 3. **Appliquer les Configurations** :
-   - Créer le namespace et les quotas : `kubectl apply -f fichiers/namespace.yaml`
-   - Déployer la base de données : `kubectl apply -f fichiers/database.yaml`
-   - Déployer le backend : `kubectl apply -f fichiers/backend.yaml`
-   - Déployer le frontend : `kubectl apply -f fichiers/frontend.yaml`
-   - Appliquer la sécurité (RBAC, NetworkPolicy) : `kubectl apply -f fichiers/rbac.yaml`
-   `kubectl apply -f fichiers/networkpolicy.yaml`
+   ```
+   # Créer le namespace et les quotas : 
+   kubectl apply -f fichiers/namespace.yaml
+   
+   # Déployer la base de données : 
+   kubectl apply -f fichiers/initdb.yaml
+   kubectl apply -f fichiers/database.yaml
+
+   # Déployer le backend : 
+   kubectl apply -f fichiers/backend.yaml
+   
+   # Déployer le frontend : 
+   kubectl apply -f fichiers/frontend.yaml
+
+   # Déployer le backup : 
+   kubectl apply -f fichiers/backup.yaml
+
+   # Appliquer la sécurité (RBAC, NetworkPolicy) : 
+   kubectl apply -f fichiers/rbac.yaml
+   kubectl apply -f fichiers/networkpolicy.yaml
+   ```
 
 4. **Vérifier le Déploiement** :
    ```
