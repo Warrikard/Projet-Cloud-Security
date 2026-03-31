@@ -28,7 +28,7 @@ Ce répertoire expose deux architectures majeures démontrant une expertise en d
     * Sécurisation réseau via des **NetworkPolicies** et contrôle d'accès **RBAC**.
     * Scans d'images et de cluster avec **Trivy**.
 
-## Veuillez trouver les vidéos explicatives dans ce lien : https://drive.google.com/drive/folders/1a6Tn3E2P5XCAqC2piMdCUgbEkBt6DPeq?usp=sharing
+### Veuillez trouver les vidéos explicatives de chacun des projets dans ce lien : https://drive.google.com/drive/folders/1a6Tn3E2P5XCAqC2piMdCUgbEkBt6DPeq?usp=sharing
 
 ---
 
