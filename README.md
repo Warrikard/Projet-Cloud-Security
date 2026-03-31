@@ -1,69 +1,60 @@
-# 🛡️ GameVault - Secure Asset Pipeline
+# Le Cloud Gourmand - Déploiement Kubernetes (K3s)
 
-> **Projet Final - Sécurité Cloud & DevSecOps**
-> **ESIEE Paris - Année 2025/2026**
+## Introduction
+Ce projet démontre le déploiement d'une application cloud-native appelée **« Le Cloud Gourmand »**, un menu de restaurant interactif. L'architecture suit un modèle 3-tiers avec un frontend, un backend et une base de données, déployés sur un cluster Kubernetes local (K3s). Le projet intègre des pratiques avancées de gestion des ressources, monitoring et sécurité pour une application robuste et scalable.
 
-![AWS Badge](https://img.shields.io/badge/AWS-Level%201-orange?style=flat&logo=amazon-aws)
-![Security Badge](https://img.shields.io/badge/Security-KMS%20%26%20VPC-red?style=flat&logo=lock)
-![DevSecOps Badge](https://img.shields.io/badge/DevSecOps-CodePipeline-blue?style=flat)
+## Architecture Générale
+L'application est divisée en trois microservices principaux :
+- **Frontend** : Interface utilisateur servie par Nginx, qui affiche le menu et agit comme reverse-proxy vers le backend.
+- **Backend** : API développée en Node.js (Express) qui traite les requêtes du frontend et interagit avec la base de données.
+- **Base de Données** : PostgreSQL pour stocker les données du menu (plats, prix, etc.).
 
-## Description du Projet
+Tous les composants sont conteneurisés avec Docker et orchestrés via Kubernetes, avec un namespace dédié (`cloud-native-project`) pour l'isolation.
 
-**GameVault** est une plateforme de gestion de contenus numériques (DAM) ultra-sécurisée, conçue pour les studios de jeux vidéo. Elle permet aux développeurs et artistes de stocker, versionner et partager des actifs sensibles (code source, textures HD, builds exécutables) tout en garantissant une confidentialité totale et une protection contre les fuites de données (leaks).
+## Comment Utiliser le Projet
+Pour déployer et tester l'application localement :
 
-Ce projet a été réalisé dans le cadre du cours de **Sécurité Cloud** dirigé par M. Badr TAJINI. Il met en œuvre une architecture **100% AWS** intégrant les pratiques **DevSecOps** et une recherche sur les attaques adverses.
+1. **Prérequis** : Assurez-vous d'avoir Docker, Kubernetes (K3s) et kubectl installés. Clonez le dépôt :
+   ```
+   git clone <URL-du-repo>
+   cd Projet-Cloud-Security/kubernetes_projet
+   ```
 
----
+2. **Démarrer le Cluster K3s** :
+   ```
+   k3s server --write-kubeconfig-mode 644
+   ```
 
-## Auteurs
+3. **Appliquer les Configurations** :
+   - Créer le namespace et les quotas : `kubectl apply -f fichiers/namespace.yaml`
+   - Déployer la base de données : `kubectl apply -f fichiers/database.yaml`
+   - Déployer le backend : `kubectl apply -f fichiers/backend.yaml`
+   - Déployer le frontend : `kubectl apply -f fichiers/frontend.yaml`
+   - Appliquer la sécurité (RBAC, NetworkPolicy) : `kubectl apply -f fichiers/rbac.yaml fichiers/networkpolicy.yaml`
 
-* **Mike CUNHA** - E5FR - mike.cunha@edu.esiee.fr
-* **Yasin GUNDOGDU** - E5FR - yasin.gundogdu@edu.esiee.fr
+4. **Vérifier le Déploiement** :
+   ```
+   kubectl get pods,svc -n cloud-native-project
+   kubectl get configmaps,secrets -n cloud-native-project
+   ```
 
----
+5. **Accéder à l'Application** :
+   - Port-forward le service frontend : `kubectl port-forward svc/frontend-service 8080:80 -n cloud-native-project`
+   - Ouvrez un navigateur à `http://localhost:8080` pour voir le menu interactif.
 
-## Architecture Cloud (AWS)
+6. **Monitoring (Optionnel)** :
+   - Installez Prometheus/Grafana via Helm si configuré : `helm install monitoring prometheus-community/kube-prometheus-stack`
+   - Accédez aux dashboards pour surveiller CPU/RAM et requêtes.
 
-L'infrastructure a été conçue pour répondre aux 5 phases du projet:
+7. **Sécurité et Sauvegardes** :
+   - Scannez avec Trivy : `trivy k8s --report summary cluster`
+   - Vérifiez les backups : `kubectl get cronjobs -n cloud-native-project`
 
-### 1. Stockage & Coûts (S3)
-* **Buckets Ségrégés :** Séparation des environnements (Source, Prod, Logs).
-* **Versioning :** Activé pour garantir l'intégrité des assets de jeu.
-* **Lifecycle Policies :** Migration automatique des vieux builds vers **S3 Glacier** pour l'optimisation des coûts.
+## Phases du Projet
+- **Phase 1 : Architecture et Déploiement** : Conteneurisation, déploiement sur K3s, gestion des configs/secrets.
+- **Phase 2 : Gestion des Ressources et Observabilité** : Quotas de ressources, monitoring avec Prometheus/Grafana (modèles USE et RED).
+- **Phase 3 : Sécurité** : RBAC pour accès limité, NetworkPolicies pour isolation réseau, scans Trivy, backups automatiques.
 
-### 2. Réseau & Isolation (VPC)
-* **VPC Custom :** Déploiement dans un Virtual Private Cloud isolé.
-* **Subnetting :** Architecture à deux niveaux (Public pour le Bastion/LB, Privé pour l'Application).
-* **Pare-feu :** Configuration stricte des Security Groups et NACLs.
-
-### 3. Cryptographie (KMS & Secrets)
-* **Chiffrement au repos :** Utilisation de clés **AWS KMS (CMK)** gérées par le client pour chiffrer les S3 et les volumes EBS.
-* **Gestion des Secrets :** Utilisation de **AWS Secrets Manager** pour sécuriser les identifiants de base de données.
-
-### 4. Surveillance & Conformité
-* **Audit :** Traçabilité complète des actions via **AWS CloudTrail**.
-* **Alerting :** Alarmes **CloudWatch** configurées pour détecter les tentatives d'accès non autorisées.
-* **Conformité :** Règles **AWS Config** pour vérifier le chiffrement des ressources.
-
----
-
-## Pipeline DevSecOps
-
-L'automatisation du déploiement intègre la sécurité "by design":
-
-1.  **Source :** GitHub (Trigger au push).
-2.  **Build & Test (AWS CodeBuild) :**
-    * Installation des dépendances.
-    * **Security Scan :** Analyse statique du code (SAST) et scan de vulnérabilités (ex: Trivy/OWASP).
-3.  **Deploy (AWS CodeDeploy) :** Mise à jour automatique des instances EC2 dans le sous-réseau privé.
-
----
-
-## Recherche : Attaques Adverses
-
-Une partie du projet est dédiée à l'étude des menaces spécifiques aux contenus numériques.
-
-* **Sujet :** La Stéganographie et les attaques via métadonnées dans les fichiers multimédias.
-* **Contexte :** Comment des acteurs malveillants peuvent dissimuler du code dans des textures de jeu vidéo.
-* **Défense :** Analyse des stratégies de mitigation mises en place sur la plateforme GameVault.
-
+## Conclusion
+Ce projet illustre les principes du cloud-native sur Kubernetes, en mettant l'accent sur la sécurité, la scalabilité et l'observabilité. Il prépare à des déploiements plus avancés comme GitOps ou CI/CD automatisés.
+'@; Set-Content -Path README.md -Value $content
