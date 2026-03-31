@@ -63,7 +63,7 @@ Pour déployer et tester l'application localement :
    - Accédez aux dashboards pour surveiller CPU/RAM et requêtes.
 
 7. **Sécurité et Sauvegardes** :
-   - Scannez avec Trivy : `trivy k8s --report summary cluster`
+   - Scannez avec Trivy : `trivy k8s --report summary`
    - Vérifiez les backups : `kubectl get cronjobs -n cloud-native-project`
 
 ## Phases du Projet
