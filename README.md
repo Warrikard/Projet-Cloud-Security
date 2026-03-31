@@ -17,7 +17,7 @@ Pour déployer et tester l'application localement :
 1. **Prérequis** : Assurez-vous d'avoir Docker, Kubernetes (K3s) et kubectl installés. Clonez le dépôt :
    ```
    git clone <URL-du-repo>
-   cd Projet-Cloud-Security/kubernetes_projet
+   cd Projet-Cloud-Security/Cloud_Native_Devops_With_Kubernetes/kubernetes_projet
    ```
 
 2. **Démarrer le Cluster K3s** :
@@ -30,7 +30,8 @@ Pour déployer et tester l'application localement :
    - Déployer la base de données : `kubectl apply -f fichiers/database.yaml`
    - Déployer le backend : `kubectl apply -f fichiers/backend.yaml`
    - Déployer le frontend : `kubectl apply -f fichiers/frontend.yaml`
-   - Appliquer la sécurité (RBAC, NetworkPolicy) : `kubectl apply -f fichiers/rbac.yaml fichiers/networkpolicy.yaml`
+   - Appliquer la sécurité (RBAC, NetworkPolicy) : `kubectl apply -f fichiers/rbac.yaml`
+   `kubectl apply -f fichiers/networkpolicy.yaml`
 
 4. **Vérifier le Déploiement** :
    ```
