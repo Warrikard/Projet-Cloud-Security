@@ -7,7 +7,7 @@ Ce projet démontre le déploiement d'une application cloud-native appelée **«
 ```bash
 Projet-Cloud-Security/
 ├── .github/workflows/              
-│   └── ci.yaml.yaml/               # Pipeline CI
+│   └── ci.yaml.yaml/              # Pipeline CI
 └── Cloud_Native_Devops_With_Kubernetes/
    ├── tds.py/                     # Labs
    ├── kubernetes_projet.py/       
@@ -23,7 +23,7 @@ Projet-Cloud-Security/
    │       ├── networkpolicy.yaml  
    │       ├── rbac.yaml           
    │       └── script              
-   └── README_KUBERNETES.md         # Documentation
+   └── README_KUBERNETES.md        # Documentation
 ```
 
 L'application est divisée en trois microservices principaux :
