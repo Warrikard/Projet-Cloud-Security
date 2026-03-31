@@ -1,55 +1,104 @@
-# SafeBoard - Portail d'intégration RH sécurisé (AWS)
+# Le Cloud Gourmand - Déploiement Kubernetes (K3s)
 
 ## Introduction
-[cite_start]Ce projet consiste en la conception et le déploiement d'une plateforme de gestion de contenus sécurisée nommée **SafeBoard**[cite: 1]. [cite_start]Il s'agit d'un portail d'intégration (onboarding) destiné aux nouveaux employés d'une entreprise pour uploader des documents sensibles (RIB, pièces d'identité) et consulter des ressources de formation de manière confidentielle[cite: 1, 13, 16, 17]. 
-
-[cite_start]L'architecture repose sur un modèle 3-tiers (Load Balancer, Serveur d'application, Base de données) hébergé sur AWS, intégrant des pratiques **DevSecOps** et une surveillance continue pour garantir la protection des données à caractère personnel (PII)[cite: 1, 18, 121, 122].
+Ce projet démontre le déploiement d'une application cloud-native appelée **« Le Cloud Gourmand »**, un menu de restaurant interactif. L'architecture suit un modèle 3-tiers avec un frontend, un backend et une base de données, déployés sur un cluster Kubernetes local (K3s). Le projet intègre des pratiques avancées de gestion des ressources, monitoring et sécurité pour une application robuste et scalable.
 
 ## Architecture Générale
 ```bash
-SafeBoard-Project/
-├── app.py                 # Application Flask (Backend & Logique AWS)
-├── buildspec.yml          # Configuration AWS CodeBuild (Scan SAST Bandit)
-├── templates/
-│   └── index.html         # Interface Frontend (Tailwind CSS)
-├── requirements.txt       # Dépendances (Flask, Boto3, PyMySQL)
-└── safeboard-app.zip      # Archive pour le déploiement S3
+Projet-Cloud-Security/
+├── .github/workflows/              
+│   └── ci.yaml.yaml/               # Pipeline CI
+├── Cloud_Native_Devops_With_Kubernetes/
+│   ├── tds.py/                     # Labs
+│   └── kubernetes_projet.py/       
+│       ├── app.py/   
+│       └── fichiers.py/            # Fichiers de cofiguration
+│           ├── backend.yaml        
+│           ├── backup.yaml         
+│           ├── database.yaml       
+│           ├── frontend.yaml       
+│           ├── get_helm.sh         
+│           ├── initdb.yaml         
+│           ├── namespace.yaml      
+│           ├── networkpolicy.yaml  
+│           ├── rbac.yaml           
+│           └── script              
+└── README.md                       # Documentation
 ```
 
-L'infrastructure cloud est segmentée pour une sécurité maximale :
-- [cite_start]**Stockage (S3)** : Buckets privés avec versioning, journalisation et chiffrement KMS[cite: 1, 49, 52, 70, 72, 419].
-- [cite_start]**Calcul (EC2)** : Instance isolée en sous-réseau privé, accessible uniquement via l'ALB[cite: 1, 121, 122].
-- [cite_start]**Base de données (RDS)** : Instance MySQL chiffrée, accessible uniquement par le serveur applicatif[cite: 1, 345, 346, 423].
-- [cite_start]**Réseau (VPC)** : Ségrégation par sous-réseaux publics/privés, NACL et VPC Endpoints[cite: 1, 226, 228, 271, 276].
+L'application est divisée en trois microservices principaux :
+- **Frontend** : Interface utilisateur servie par Nginx, qui affiche le menu et agit comme reverse-proxy vers le backend.
+- **Backend** : API développée en Node.js (Express) qui traite les requêtes du frontend et interagit avec la base de données.
+- **Base de Données** : PostgreSQL pour stocker les données du menu (plats, prix, etc.).
 
-## Démarrage Rapide
+Tous les composants sont conteneurisés avec Docker et orchestrés via Kubernetes, avec un namespace dédié (`cloud-native-project`) pour l'isolation.
 
-1. **Prérequis** :
-   - Un compte AWS avec les droits administrateur.
-   - Python 3.x installé pour les tests locaux.
-   - Les outils AWS CLI et session manager configurés.
+## Comment Utiliser le Projet
+Pour déployer et tester l'application localement :
 
-2. **Configuration des Secrets** :
-   - [cite_start]Créez un secret dans **AWS Secrets Manager** nommé `safeboard/db-creds` contenant les identifiants de la base RDS[cite: 1, 561, 564].
+1. **Prérequis** : Assurez-vous d'avoir Docker, Kubernetes (K3s) et kubectl installés. Clonez le dépôt :
+   ```
+   git clone https://github.com/Warrikard/Projet-Cloud-Security.git
+   cd Projet-Cloud-Security/Cloud_Native_Devops_With_Kubernetes/kubernetes_projet
+   ```
 
-3. **Déploiement de l'Infrastructure** :
-   - [cite_start]Déployez le VPC, les sous-réseaux et l'ALB via la console ou Terraform[cite: 1, 225, 226].
-   - [cite_start]Configurez les **Security Groups** pour n'autoriser que les flux nécessaires (Port 80 vers EC2, Port 3306 vers RDS)[cite: 1, 343, 346].
+2. **Démarrer le Cluster K3s** :
+   ```
+   k3s server --write-kubeconfig-mode 644
+   ```
+   ```
+   #(Optionnel) Supprimer et reinstaller le cluster k3s
+   /usr/local/bin/k3s-uninstall.sh
+   curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644
+   ```
 
-4. **Pipeline CI/CD (DevSecOps)** :
-   - [cite_start]Uploadez `safeboard-app.zip` dans votre bucket source S3[cite: 1, 748, 764, 768].
-   - [cite_start]**AWS CodePipeline** déclenchera automatiquement **CodeBuild** pour analyser le code avec **Bandit**[cite: 1, 746, 751, 752].
-   - [cite_start]Si le scan réussit, l'application est prête pour le déploiement[cite: 1, 862].
+3. **Appliquer les Configurations** :
+   ```
+   # Créer le namespace et les quotas : 
+   kubectl apply -f fichiers/namespace.yaml
+   
+   # Déployer la base de données : 
+   kubectl apply -f fichiers/initdb.yaml
+   kubectl apply -f fichiers/database.yaml
 
-5. **Accès à l'Application** :
-   - [cite_start]Utilisez l'URL DNS de l'**Application Load Balancer** pour accéder à l'interface SafeBoard[cite: 1, 121].
+   # Déployer le backend : 
+   kubectl apply -f fichiers/backend.yaml
+   
+   # Déployer le frontend : 
+   kubectl apply -f fichiers/frontend.yaml
+
+   # Déployer le backup : 
+   kubectl apply -f fichiers/backup.yaml
+
+   # Appliquer la sécurité (RBAC, NetworkPolicy) : 
+   kubectl apply -f fichiers/rbac.yaml
+   kubectl apply -f fichiers/networkpolicy.yaml
+   ```
+
+4. **Vérifier le Déploiement** :
+   ```
+   kubectl get pods,svc -n cloud-native-project
+   kubectl get configmaps,secrets -n cloud-native-project
+   ```
+   - (Si non fait) Déclarer le chemin de la configuration sur les onglet que l'on utilise : `export KUBECONFIG=/etc/rancher/k3s/k3s.yaml`
+
+5. **Accéder à l'Application** :
+   - Port-forward le service frontend : `kubectl port-forward svc/frontend-service 8080:80 -n cloud-native-project`
+   - Ouvrez un navigateur à `http://localhost:8080` pour voir le menu interactif.
+
+6. **Monitoring (Optionnel)** :
+   - Installez Prometheus/Grafana via Helm si configuré : `helm install monitoring prometheus-community/kube-prometheus-stack`
+   - Port-forward le service Grafana : `kubectl port-forward svc/monitoring-grafana 3000:80 -n default`
+   - Accédez aux dashboards pour surveiller CPU/RAM et requêtes.
+
+7. **Sécurité et Sauvegardes** :
+   - Scannez avec Trivy : `trivy k8s --include-namespaces cloud-native-project --report summary`
+   - Vérifiez les backups : `kubectl get cronjobs -n cloud-native-project`
 
 ## Phases du Projet
-- [cite_start]**Phase 1 : Architecture et Stockage** : Conception Cloudcraft, estimation des coûts (32,77$/mois) et sécurisation des buckets S3 (Block Public Access, Inventaires)[cite: 1, 49, 100, 119, 125].
-- [cite_start]**Phase 2 : Sécurité Réseau** : Isolation VPC, routage via NAT Gateway et configuration des NACL stateless[cite: 1, 226, 227, 273].
-- [cite_start]**Phase 3 : Chiffrement et Secrets** : Utilisation de clés KMS pour S3/EBS/RDS et retrait des mots de passe du code via Secrets Manager[cite: 1, 416, 419, 559, 561].
-- [cite_start]**Phase 4 : Surveillance et Conformité** : Audit CloudTrail, alertes CloudWatch SNS sur accès refusés et règles AWS Config[cite: 1, 598, 604, 605, 721, 725].
-- [cite_start]**Phase 5 : DevSecOps** : Automatisation des tests de sécurité statiques (SAST) dans le pipeline de déploiement[cite: 1, 744, 746].
+- **Phase 1 : Architecture et Déploiement** : Conteneurisation, déploiement sur K3s, gestion des configs/secrets.
+- **Phase 2 : Gestion des Ressources et Observabilité** : Quotas de ressources, monitoring avec Prometheus/Grafana (modèles USE et RED).
+- **Phase 3 : Sécurité** : RBAC pour accès limité, NetworkPolicies pour isolation réseau, scans Trivy, backups automatiques.
 
-## Recherche Théorique
-[cite_start]Le projet inclut une analyse des **attaques adverses** ciblant les contenus numériques, telles que les *Malicious Uploads*, l'IDOR et le *Data Poisoning*, ainsi que les stratégies de défense associées (Lambda antivirus, WAF, URL présignées)[cite: 1, 869, 875, 878, 882].
+## Conclusion
+Ce projet illustre les principes du cloud-native sur Kubernetes, en mettant l'accent sur la sécurité, la scalabilité et l'observabilité. Il prépare à des déploiements plus avancés comme GitOps ou CI/CD automatisés.
