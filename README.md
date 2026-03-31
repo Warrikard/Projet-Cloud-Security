@@ -4,6 +4,28 @@
 Ce projet démontre le déploiement d'une application cloud-native appelée **« Le Cloud Gourmand »**, un menu de restaurant interactif. L'architecture suit un modèle 3-tiers avec un frontend, un backend et une base de données, déployés sur un cluster Kubernetes local (K3s). Le projet intègre des pratiques avancées de gestion des ressources, monitoring et sécurité pour une application robuste et scalable.
 
 ## Architecture Générale
+```bash
+Projet-Cloud-Security/
+├── .github/workflows/              
+│   └── ci.yaml.yaml/               # Pipeline CI
+├── Cloud_Native_Devops_With_Kubernetes/
+│   ├── tds.py/                     # Labs
+│   └── kubernetes_projet.py/       
+│       ├── app.py/   
+│       └── fichiers.py/            # Fichiers de cofiguration
+│           ├── backend.yaml        
+│           ├── backup.yaml         
+│           ├── database.yaml       
+│           ├── frontend.yaml       
+│           ├── get_helm.sh         
+│           ├── initdb.yaml         
+│           ├── namespace.yaml      
+│           ├── networkpolicy.yaml  
+│           ├── rbac.yaml           
+│           └── script              
+└── README.md                       # Documentation
+```
+
 L'application est divisée en trois microservices principaux :
 - **Frontend** : Interface utilisateur servie par Nginx, qui affiche le menu et agit comme reverse-proxy vers le backend.
 - **Backend** : API développée en Node.js (Express) qui traite les requêtes du frontend et interagit avec la base de données.
@@ -59,11 +81,13 @@ Pour déployer et tester l'application localement :
    - Ouvrez un navigateur à `http://localhost:8080` pour voir le menu interactif.
 
 6. **Monitoring (Optionnel)** :
+   - (Si non fait) Déclarer le chemin de la configuration : `export KUBECONFIG=/etc/rancher/k3s/k3s.yaml`
    - Installez Prometheus/Grafana via Helm si configuré : `helm install monitoring prometheus-community/kube-prometheus-stack`
+   - Port-forward le service Grafana : `kubectl port-forward svc/monitoring-grafana 3000:80 -n default`
    - Accédez aux dashboards pour surveiller CPU/RAM et requêtes.
 
 7. **Sécurité et Sauvegardes** :
-   - Scannez avec Trivy : `trivy k8s --report summary`
+   - Scannez avec Trivy : `trivy k8s --include-namespaces cloud-native-project --report summary`
    - Vérifiez les backups : `kubectl get cronjobs -n cloud-native-project`
 
 ## Phases du Projet
