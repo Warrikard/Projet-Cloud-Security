@@ -1,55 +1,56 @@
-# SafeBoard - Portail d'intégration RH sécurisé (AWS)
+# 📂 Portfolio Cloud Security & Cloud-Native Engineering
 
-## Introduction
-Ce projet consiste en la conception et le déploiement d'une plateforme de gestion de contenus sécurisée nommée **SafeBoard**. Il s'agit d'un portail d'intégration (onboarding) destiné aux nouveaux employés d'une entreprise pour uploader des documents sensibles (RIB, pièces d'identité) et consulter des ressources de formation de manière confidentielle. 
+## 👥 Présentation du Groupe
+Ce dépôt GitHub regroupe les travaux réalisés dans le cadre du module **Sécurité Cloud** à l'**ESIEE Paris** pour l'année universitaire **2025-2026**.
 
-L'architecture repose sur un modèle 3-tiers (Load Balancer, Serveur d'application, Base de données) hébergé sur AWS, intégrant des pratiques **DevSecOps** et une surveillance continue pour garantir la protection des données à caractère personnel (PII).
+**Membres du binôme :**
+* **Yasin GUNDOGDU** (yasin.gundogdu@edu.esiee.fr)
+* **Mike CUNHA** (mike.cunha@edu.esiee.fr) 
 
-## Architecture Générale
+---
+
+## 🚀 Vue d'Ensemble des Projets
+Ce répertoire expose deux architectures majeures démontrant une expertise en déploiement sécurisé, en orchestration de conteneurs et en automatisation **DevSecOps**.
+
+### 🛡️ Projet 1 : SafeBoard (Infrastructure AWS)
+**SafeBoard** est un portail d'intégration RH sécurisé conçu pour gérer des données à caractère personnel (PII) hautement critiques. 
+* **Objectif :** Permettre l'upload sécurisé de documents (RIB, identité) et la consultation de formations internes.
+* **Stack Technique :** AWS (EC2, RDS, S3, ALB), Python/Flask, Boto3.
+* **Points Clés Sécurité :** * Chiffrement de bout en bout via **AWS KMS**.
+    * Surveillance continue avec **CloudWatch**, **CloudTrail** et **AWS Config**.
+    * Pipeline **DevSecOps** intégrant des scans de vulnérabilités automatisés avec **Bandit**.
+
+### 🍽️ Projet 2 : Le Cloud Gourmand (Orchestration Kubernetes)
+**Le Cloud Gourmand** est une application cloud-native de menu interactif pour restaurant, déployée sur un cluster Kubernetes.
+* **Objectif :** Déployer une architecture microservices robuste, scalable et monitorée.
+* **Stack Technique :** K3s, Docker, Nginx, PostgreSQL, Helm.
+* **Points Clés Ingénierie :** * Observabilité avancée avec la stack **Prometheus & Grafana** (Modèles USE et RED).
+    * Sécurisation réseau via des **NetworkPolicies** et contrôle d'accès **RBAC**.
+    * Scans d'images et de cluster avec **Trivy**.
+
+---
+
+## 📁 Structure du Dépôt
 ```bash
-SafeBoard-Project/
-├── app.py                 # Application Flask (Backend & Logique AWS)
-├── buildspec.yml          # Configuration AWS CodeBuild (Scan SAST Bandit)
-├── templates/
-│   └── index.html         # Interface Frontend (Tailwind CSS)
-├── requirements.txt       # Dépendances (Flask, Boto3, PyMySQL)
-└── safeboard-app.zip      # Archive pour le déploiement S3
+.
+├── AWS-SafeBoard/              # Dossier complet du projet AWS
+│   ├── app.py                  # Code source backend
+│   ├── buildspec.yml           # Configuration du build de sécurité
+│   └── rapport-technique.pdf   # Documentation détaillée AWS
+├── K8s-Cloud-Gourmand/         # Dossier complet du projet Kubernetes
+│   ├── manifests/              # Fichiers YAML (Deployment, SVC, RBAC)
+│   ├── monitoring/             # Dashboards Grafana & Alertes
+│   └── Projet.md               # Documentation technique K8s
+└── README.md                   # Cette présentation
 ```
 
-L'infrastructure cloud est segmentée pour une sécurité maximale :
-- **Stockage (S3)** : Buckets privés avec versioning, journalisation et chiffrement KMS.
-- **Calcul (EC2)** : Instance isolée en sous-réseau privé, accessible uniquement via l'ALB.
-- **Base de données (RDS)** : Instance MySQL chiffrée, accessible uniquement par le serveur applicatif.
-- **Réseau (VPC)** : Ségrégation par sous-réseaux publics/privés, NACL et VPC Endpoints.
+---
 
-## Démarrage Rapide
+## 🛠️ Compétences Démontrées
+* **Architecte Cloud :** Conception de réseaux isolés (VPC, Subnets) et gestion de la haute disponibilité via Load Balancing.
+* **Ingénieur Sécurité :** Gestion des identités (IAM), des secrets applicatifs et mise en œuvre du chiffrement au repos et en transit.
+* **DevOps / DevSecOps :** Automatisation de pipelines CI/CD sécurisés et déploiement d'outils de monitoring/alerting.
+* **Cloud-Native :** Conteneurisation d'applications et orchestration de services via Kubernetes.
 
-1. **Prérequis** :
-   - Un compte AWS avec les droits administrateur.
-   - Python 3.x installé pour les tests locaux.
-   - Les outils AWS CLI et session manager configurés.
-
-2. **Configuration des Secrets** :
-   - Créez un secret dans **AWS Secrets Manager** nommé `safeboard/db-creds` contenant les identifiants de la base RDS.
-
-3. **Déploiement de l'Infrastructure** :
-   - Déployez le VPC, les sous-réseaux et l'ALB via la console ou Terraform.
-   - Configurez les **Security Groups** pour n'autoriser que les flux nécessaires (Port 80 vers EC2, Port 3306 vers RDS).
-
-4. **Pipeline CI/CD (DevSecOps)** :
-   - Uploadez `safeboard-app.zip` dans votre bucket source S3.
-   - **AWS CodePipeline** déclenchera automatiquement **CodeBuild** pour analyser le code avec **Bandit**.
-   - Si le scan réussit, l'application est prête pour le déploiement.
-
-5. **Accès à l'Application** :
-   - Utilisez l'URL DNS de l'**Application Load Balancer** pour accéder à l'interface SafeBoard.
-
-## Phases du Projet
-- **Phase 1 : Architecture et Stockage** : Conception Cloudcraft, estimation des coûts (32,77$/mois) et sécurisation des buckets S3 (Block Public Access, Inventaires).
-- **Phase 2 : Sécurité Réseau** : Isolation VPC, routage via NAT Gateway et configuration des NACL stateless.
-- **Phase 3 : Chiffrement et Secrets** : Utilisation de clés KMS pour S3/EBS/RDS et retrait des mots de passe du code via Secrets Manager.
-- **Phase 4 : Surveillance et Conformité** : Audit CloudTrail, alertes CloudWatch SNS sur accès refusés et règles AWS Config.
-- **Phase 5 : DevSecOps** : Automatisation des tests de sécurité statiques (SAST) dans le pipeline de déploiement.
-
-## Recherche Théorique
-Le projet inclut une analyse des **attaques adverses** ciblant les contenus numériques, telles que les *Malicious Uploads*, l'IDOR et le *Data Poisoning*, ainsi que les stratégies de défense associées (Lambda antivirus, WAF, URL présignées).
+---
+*© 2026 - ESIEE Paris - Unité Sécurité Cloud*
