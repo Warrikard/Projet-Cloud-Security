@@ -1,7 +1,7 @@
 # SafeBoard - Portail d'intégration RH sécurisé (AWS)
 
 ## Introduction
-Ce projet consiste en la conception et le déploiement d'une plateforme de gestion de contenus sécurisée nommée **SafeBoard**[cite: 1]. Il s'agit d'un portail d'intégration (onboarding) destiné aux nouveaux employés d'une entreprise pour uploader des documents sensibles (RIB, pièces d'identité) et consulter des ressources de formation de manière confidentielle. 
+Ce projet consiste en la conception et le déploiement d'une plateforme de gestion de contenus sécurisée nommée **SafeBoard**. Il s'agit d'un portail d'intégration (onboarding) destiné aux nouveaux employés d'une entreprise pour uploader des documents sensibles (RIB, pièces d'identité) et consulter des ressources de formation de manière confidentielle. 
 
 L'architecture repose sur un modèle 3-tiers (Load Balancer, Serveur d'application, Base de données) hébergé sur AWS, intégrant des pratiques **DevSecOps** et une surveillance continue pour garantir la protection des données à caractère personnel (PII).
 
