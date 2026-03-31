@@ -33,14 +33,8 @@ Ce répertoire expose deux architectures majeures démontrant une expertise en d
 ## 📁 Structure du Dépôt
 ```bash
 .
-├── AWS-SafeBoard/              # Dossier complet du projet AWS
-│   ├── app.py                  # Code source backend
-│   ├── buildspec.yml           # Configuration du build de sécurité
-│   └── rapport-technique.pdf   # Documentation détaillée AWS
-├── K8s-Cloud-Gourmand/         # Dossier complet du projet Kubernetes
-│   ├── manifests/              # Fichiers YAML (Deployment, SVC, RBAC)
-│   ├── monitoring/             # Dashboards Grafana & Alertes
-│   └── Projet.md               # Documentation technique K8s
+├── Partie 1 - Cloud Security              # Dossier complet du projet AWS
+├── Cloud_Native_Devops_With_Kubernetes         # Dossier complet du projet Kubernetes
 └── README.md                   # Cette présentation
 ```
 
